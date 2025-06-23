@@ -2,8 +2,50 @@ package CodingBat;
 
 public class Loops {
   public static void main(String[] args) {
+    System.out.println("primeCombination(893) = " + primeCombination(893));
     System.out.println(nearlyPrime(77));
     System.out.println("Hello");
+  }
+
+  /*
+   * 
+    Solve this problem first: "sumPrimes" Define a function that when passed an integer, 
+    returns true if it can be split in a way that the left and right parts are both prime, false otherwise.
+
+    For example, you can split 7313 right down the middle and the left part - 73, and the right part 13, 
+    are both primes. BTW, you can also split it after the 7 so that both 7 and 313 are prime.
+
+    Similarly, 893 split after the 9 results in primes on either side - 89 and 3.
+
+    However, 277 cannot be split in a way that the left and right parts are prime.
+
+
+    primeCombination(277) → false
+    primeCombination(893) → true
+    primeCombination(7313) → true
+   */
+  static boolean primeCombination(int n) {
+    if (n < 100) {
+        return false;
+    }
+    
+    int divisor = 10;
+    int temp = n;
+    
+    // Iterate through possible divisions
+    while (temp / 10 > 0) {
+        int left = n / divisor;
+        int right = n % divisor;
+        
+        if (isPrime(left) && isPrime(right)) {
+            return true;
+        }
+        
+        divisor *= 10;
+        temp /= 10;
+    }
+    
+    return false;
   }
 
   /*
@@ -47,7 +89,6 @@ public class Loops {
    * }
    */
 
-   
   /*
    * Solve this problem first: isPrime()
    * Define a function that when passed an integer,
@@ -172,6 +213,9 @@ public class Loops {
    * isPrime(103) → true
    */
   static boolean isPrime(int n) {
+    if (n < 2 || n % 2 == 0){
+      return false;
+    }
     int i = 3;
     while (i * i <= n) {
       if (n % i == 0) {

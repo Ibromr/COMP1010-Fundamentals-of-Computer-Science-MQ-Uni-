@@ -6,7 +6,7 @@ public class Conditions {
       
     // Test cases
     System.out.println("median(5, 10, 15) = " + median(10000, 10, 15));
-    System.out.println("median(10, 10, 15) = " + median(10, 10, 5));
+    System.out.println("getUpdatedTime(10, 20, 23, 30) = " + getUpdatedTime(10, 20, 23, 30));
   }
 
   /**
@@ -34,57 +34,13 @@ public class Conditions {
     }
   }
 
-  String getUpdatedTime(int hour1, int minute1, int hoursToAdd, int minutesToAdd) {
-  int updatedHour = hour1;
-  int updatedMinute = minute1;
-  
-  if(hoursToAdd > 0) {
-    updatedHour = hoursUpdating(updatedHour, hoursToAdd);
+  public static String getUpdatedTime(int hour1, int minute1, int hoursToAdd, int minutesToAdd) {
+    int updatedMinute = minute1 + minutesToAdd;
+    int updatedHour = hour1 + hoursToAdd + updatedMinute/60;
+    updatedHour %= 24;
+    updatedMinute %= 60;
+    return (updatedHour < 10 ? "0"+updatedHour : updatedHour) + ":" + (updatedMinute < 10 ? "0"+updatedMinute : updatedMinute);
   }
-  
-  while(minutesToAdd > 0){         
-    int temp = 0;         
-    temp = 60 - updatedMinute;    
-    if(temp > 0 ){
-      minutesToAdd -= temp;       
-      updatedMinute += temp;
-      
-      if(updatedMinute > 59) {
-        minutesToAdd += updatedMinute - 59;
-        updatedHour += 1;
-        updatedMinute = 0;
-        
-        if(updatedHour > 23) {
-          updatedHour = 0; 
-        }
-      }
-    }
-  } 
-  
-  if(updatedHour == 0) {
-     return "00" + ":" + (updatedMinute == 0 ? "00" : updatedMinute);
-  }
-
-  return updatedHour+":"+updatedMinute;
-}
-
-int hoursUpdating(int updatedHour, int hoursToAdd) {
-  while(hoursToAdd > 0){         
-    int temp = 0;         
-    temp = 24 - updatedHour;    
-    if(temp > 0 ){
-      hoursToAdd -= temp;       
-      updatedHour += temp;
-      
-      if(updatedHour > 23) {
-        hoursToAdd += updatedHour - 23;
-        updatedHour = 0;
-      }
-    }
-  } 
-  return updatedHour;
-}
-
 
 
 }
