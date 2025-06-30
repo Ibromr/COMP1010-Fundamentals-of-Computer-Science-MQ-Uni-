@@ -2,10 +2,11 @@ package CodingBat;
 
 public class Recursion {
     public static void main(String[] args) {
-        System.out.println("fibonacci(10) → expected:55  Run:" + fibonacci(10));
-        System.out.println("fibonacci(10) → expected:81  Run:" + tribonacci(10));
-        System.out.println("commonDigit(12345, 54321) → expected:true  Run:" + commonDigit(12345, 54321));
-    }
+        System.out.println("fibonacci(10) → Expected:55  Run:" + fibonacci(10));
+        System.out.println("fibonacci(10) → Expected:81  Run:" + tribonacci(10));
+        System.out.println("commonDigit(12345, 54321) Expected:true  Run:" + commonDigit(12345, 54321));
+        System.out.println("binarySearch([10, 20, 20, 20, 20, 70, 90], 70) Expected:5  Run:" + binarySearch(new int[]{10, 20, 20, 20, 20, 70, 90}, 70));
+    }   
 
     /*
      * Fibonacci sequence and Fibonacci numbers are extremely famous.
@@ -89,24 +90,24 @@ public class Recursion {
      * commonDigit(12345, 54321) → true
      * commonDigit(12345, 67890) → false
      * 
-     * Sample: 
-     * boolean commonDigit(int a, int b) {  // Very concise
-        if (a == 0 || b == 0) {
-            return false;
-        }
-        
-        if(a%10 == b%10) {
-            return true;
-        }
-        
-        if(commonDigit(a, b/10)) {
-            return true;
-        }
-        
-        return commonDigit(a/10, b);
-        
-       }
-     */ 
+     * Sample:
+     * boolean commonDigit(int a, int b) { // Very concise
+     * if (a == 0 || b == 0) {
+     * return false;
+     * }
+     * 
+     * if(a%10 == b%10) {
+     * return true;
+     * }
+     * 
+     * if(commonDigit(a, b/10)) {
+     * return true;
+     * }
+     * 
+     * return commonDigit(a/10, b);
+     * 
+     * }
+     */
 
     static boolean commonDigit(int a, int b) {
         if (a == 0) {
@@ -119,7 +120,7 @@ public class Recursion {
             return true;
         }
 
-        return commonDigit(a/10, b);
+        return commonDigit(a / 10, b);
     }
 
     static boolean isCommon(int tempA, int tempB) {
@@ -129,7 +130,39 @@ public class Recursion {
         if (tempA % 10 == tempB % 10) {
             return true;
         } else {
-            return isCommon(tempA, tempB/10);
+            return isCommon(tempA, tempB / 10);
+        }
+    }
+
+    /*
+     * Define a function that when passed an integer array sorted in ascending order, 
+     * and another integer, performs binary search to return an index, any index, 
+     * at which the item exists in the array. Return -1 if the item does not exist in the array. 
+     * Google "binary search" to see the algorithm.
+
+
+        binarySearch([10, 20, 20, 20, 20, 70, 90], 10) → 0
+        binarySearch([10, 20, 20, 20, 20, 70, 90], 20) → 3
+        binarySearch([10, 20, 20, 20, 20, 70, 90], 70) → 5
+     */
+    static int binarySearch(int[] a, int val) {
+        return binarySearch(a, val, 0, a.length -1 );
+    }
+
+    static int binarySearch(int[] a, int val, int first, int last) {
+        if (first > last) {
+            return -1;
+        }
+        int mid = (first+last)/2;
+        if(a[mid] == val) {
+            return mid;
+        }
+
+        if(a[mid] > val) {
+            return binarySearch(a, val, first, mid-1);
+        } 
+        else {
+            return binarySearch(a, val, mid+1, last);
         }
     }
 
