@@ -5,8 +5,11 @@ public class Recursion {
         System.out.println("fibonacci(10) → Expected:55  Run:" + fibonacci(10));
         System.out.println("fibonacci(10) → Expected:81  Run:" + tribonacci(10));
         System.out.println("commonDigit(12345, 54321) Expected:true  Run:" + commonDigit(12345, 54321));
-        System.out.println("binarySearch([10, 20, 20, 20, 20, 70, 90], 70) Expected:5  Run:" + binarySearch(new int[]{10, 20, 20, 20, 20, 70, 90}, 70));
-    }   
+        System.out.println("binarySearch([10, 20, 20, 20, 20, 70, 90], 70) Expected:5  Run:"
+                + binarySearch(new int[] { 10, 20, 20, 20, 20, 70, 90 }, 70));
+        System.out.println("areAnagrams('hi', 'hi!') → Expected:false  Run:" + areAnagrams("hi", "hi!"));
+
+    }
 
     /*
      * Fibonacci sequence and Fibonacci numbers are extremely famous.
@@ -135,35 +138,110 @@ public class Recursion {
     }
 
     /*
-     * Define a function that when passed an integer array sorted in ascending order, 
-     * and another integer, performs binary search to return an index, any index, 
-     * at which the item exists in the array. Return -1 if the item does not exist in the array. 
+     * Define a function that when passed an integer array sorted in ascending
+     * order,
+     * and another integer, performs binary search to return an index, any index,
+     * at which the item exists in the array. Return -1 if the item does not exist
+     * in the array.
      * Google "binary search" to see the algorithm.
-
-
-        binarySearch([10, 20, 20, 20, 20, 70, 90], 10) → 0
-        binarySearch([10, 20, 20, 20, 20, 70, 90], 20) → 3
-        binarySearch([10, 20, 20, 20, 20, 70, 90], 70) → 5
+     * 
+     * 
+     * binarySearch([10, 20, 20, 20, 20, 70, 90], 10) → 0
+     * binarySearch([10, 20, 20, 20, 20, 70, 90], 20) → 3
+     * binarySearch([10, 20, 20, 20, 20, 70, 90], 70) → 5
      */
     static int binarySearch(int[] a, int val) {
-        return binarySearch(a, val, 0, a.length -1 );
+        return binarySearch(a, val, 0, a.length - 1);
     }
 
     static int binarySearch(int[] a, int val, int first, int last) {
         if (first > last) {
             return -1;
         }
-        int mid = (first+last)/2;
-        if(a[mid] == val) {
+        int mid = (first + last) / 2;
+        if (a[mid] == val) {
             return mid;
         }
 
-        if(a[mid] > val) {
-            return binarySearch(a, val, first, mid-1);
-        } 
-        else {
-            return binarySearch(a, val, mid+1, last);
+        if (a[mid] > val) {
+            return binarySearch(a, val, first, mid - 1);
+        } else {
+            return binarySearch(a, val, mid + 1, last);
         }
     }
+
+    /*Define a function that when passed two Strings, 
+      returns true if they are anagrams of one another.
+
+
+    areAnagrams("hello!", "olel!h") → true
+    areAnagrams("", "") → true
+    areAnagrams("superman", "supremAn") → false
+     */
+    static boolean areAnagrams(String a, String b) {
+        if (a.length() == 0 && b.length() == 0) {
+            return true;
+        }
+
+        if (a.length() <= 0 || b.length() <= 0) {
+            return false;
+        }
+        
+        if (a.charAt(0) == b.charAt(0)) {
+            return areAnagrams(a.substring(1, a.length()), b.substring(1, b.length()));
+        }
+
+        if (a.charAt(0) != b.charAt(0)) {
+            int deletion = helpAnagrams(a, b, -1);
+            if(deletion >= b.length()) {
+                return areAnagrams(a.substring(1, a.length()), b.substring(0,deletion));
+            }
+            if (deletion > 0) {
+                return areAnagrams(a.substring(1, a.length()), b.substring(0,deletion)+b.substring(deletion+1,b.length()));
+            }
+
+            if(deletion == -1) {
+                return false;
+            }
+        }
+        
+        return false;
+    }
+
+    static int helpAnagrams(String a, String b, int deletion) {
+        if (b.length() <= 0) {
+            return -1;
+        }
+
+        if (a.charAt(0) == b.charAt(0)) {
+            deletion++;
+            return deletion;
+        }
+        
+        else if (a.charAt(0) != b.charAt(0)) {
+            deletion++;
+            return helpAnagrams(a, b.substring(1), deletion);
+        }
+        
+        return deletion;
+    }
+    /*  ACTUALLY THERE IS MUCH EASIER OPTION THAN MINE:
+    boolean areAnagrams(String a, String b) {
+        if(a.isEmpty() && b.isEmpty()) {
+            return true;
+        }
+        if(a.length() != b.length()) {
+            return false;
+        }
+        int idx = b.indexOf(a.charAt(0));
+        if(idx < 0) {
+            return false;
+        }
+        return areAnagrams(a.substring(1), b.substring(0, idx) + b.substring(idx+1));
+    }
+
+*/
+
+
 
 }
