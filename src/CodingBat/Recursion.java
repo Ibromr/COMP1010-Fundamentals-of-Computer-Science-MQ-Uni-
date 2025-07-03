@@ -8,6 +8,8 @@ public class Recursion {
         System.out.println("binarySearch([10, 20, 20, 20, 20, 70, 90], 70) Expected:5  Run:"
                 + binarySearch(new int[] { 10, 20, 20, 20, 20, 70, 90 }, 70));
         System.out.println("areAnagrams('hi', 'hi!') → Expected:false  Run:" + areAnagrams("hi", "hi!"));
+        System.out.println("addSubtractUpTo([10, 70, 20, 90], 170, 0) → Expected:true  Run:"
+                + addSubtractUpTo(new int[] { 10, 70, 20, 90 }, 170, 0));
 
     }
 
@@ -170,13 +172,14 @@ public class Recursion {
         }
     }
 
-    /*Define a function that when passed two Strings, 
-      returns true if they are anagrams of one another.
-
-
-    areAnagrams("hello!", "olel!h") → true
-    areAnagrams("", "") → true
-    areAnagrams("superman", "supremAn") → false
+    /*
+     * Define a function that when passed two Strings,
+     * returns true if they are anagrams of one another.
+     * 
+     * 
+     * areAnagrams("hello!", "olel!h") → true
+     * areAnagrams("", "") → true
+     * areAnagrams("superman", "supremAn") → false
      */
     static boolean areAnagrams(String a, String b) {
         if (a.length() == 0 && b.length() == 0) {
@@ -186,25 +189,26 @@ public class Recursion {
         if (a.length() <= 0 || b.length() <= 0) {
             return false;
         }
-        
+
         if (a.charAt(0) == b.charAt(0)) {
             return areAnagrams(a.substring(1, a.length()), b.substring(1, b.length()));
         }
 
         if (a.charAt(0) != b.charAt(0)) {
             int deletion = helpAnagrams(a, b, -1);
-            if(deletion >= b.length()) {
-                return areAnagrams(a.substring(1, a.length()), b.substring(0,deletion));
+            if (deletion >= b.length()) {
+                return areAnagrams(a.substring(1, a.length()), b.substring(0, deletion));
             }
             if (deletion > 0) {
-                return areAnagrams(a.substring(1, a.length()), b.substring(0,deletion)+b.substring(deletion+1,b.length()));
+                return areAnagrams(a.substring(1, a.length()),
+                        b.substring(0, deletion) + b.substring(deletion + 1, b.length()));
             }
 
-            if(deletion == -1) {
+            if (deletion == -1) {
                 return false;
             }
         }
-        
+
         return false;
     }
 
@@ -217,31 +221,99 @@ public class Recursion {
             deletion++;
             return deletion;
         }
-        
+
         else if (a.charAt(0) != b.charAt(0)) {
             deletion++;
             return helpAnagrams(a, b.substring(1), deletion);
         }
-        
+
         return deletion;
     }
-    /*  ACTUALLY THERE IS MUCH EASIER OPTION THAN MINE:
-    boolean areAnagrams(String a, String b) {
-        if(a.isEmpty() && b.isEmpty()) {
+    /*
+     * ACTUALLY THERE IS MUCH EASIER OPTION THAN MINE:
+     * boolean areAnagrams(String a, String b) {
+     * if(a.isEmpty() && b.isEmpty()) {
+     * return true;
+     * }
+     * if(a.length() != b.length()) {
+     * return false;
+     * }
+     * int idx = b.indexOf(a.charAt(0));
+     * if(idx < 0) {
+     * return false;
+     * }
+     * return areAnagrams(a.substring(1), b.substring(0, idx) + b.substring(idx+1));
+     * }
+     * 
+     */
+
+    /*
+     * Define a function that when passed an array, an integer (say target),
+     * and another integer (say idx), returns true if zero or more items
+     * in the array, starting at index idx, can be added or subtracted
+     * to construct target, false otherwise.
+     * 
+     * 
+     * addSubtractUpTo([], 100, 0) → false
+     * addSubtractUpTo([10, 70, 20, 90], 10, 4) → false
+     * addSubtractUpTo([10, 70, 20, 90], 170, 0) → true
+     * 
+     */
+    static boolean addSubtractUpTo(int[] data, int target, int idx) {
+        if (idx >= data.length) {
+            return target == 0;
+        }
+
+        if (target == 0) {
             return true;
         }
-        if(a.length() != b.length()) {
-            return false;
-        }
-        int idx = b.indexOf(a.charAt(0));
-        if(idx < 0) {
-            return false;
-        }
-        return areAnagrams(a.substring(1), b.substring(0, idx) + b.substring(idx+1));
+
+        return addSubtractUpTo(data, target + data[idx], idx + 1)
+                || addSubtractUpTo(data, target - data[idx], idx + 1);
     }
+    /*
+     * THIS IS MY FIRST ATTEMPT
+     * boolean addSubtractUpTo(int[] data, int target, int idx) {
+        * if (data.length == 0 || idx >= data.length) {
+        *      return false;
+        * }
+     * 
+        * if (target == 0) {
+        *       return true;
+        * }
+     * 
+        * return help(data, target + data[idx], idx + 1)
+        *      || help(data, target - data[idx], idx + 1);
+     * }
+     * 
+     * boolean help(int[] data, int target, int idx) {
+        * if (target == 0) {
+        *       return true;
+        * }
+     * 
+        * if (idx >= data.length) {
+        *       return false;
+        * }
+     * 
+        * return help(data, target + data[idx], idx + 1)
+        *       || help(data, target - data[idx], idx + 1);
+     * }
+     * 
+     */
 
-*/
+    /*
+     * 
+    Define a recursive function that when passed two dates in the same year 
+    (assume non-leap year), returns the difference (in days) between the two. 
+    For example, there is a two-day difference between 13/04/2011 and 15/04/2011. 
+    You may not use any loops. You may create helper functions if needed.
 
 
-
+    diffDates1(25, 7, 17, 8) → 23
+    diffDates1(15, 7, 31, 12) → 169
+    diffDates1(1, 1, 19, 11) → 322
+     */
+    int diffDates1(int day1, int month1, int day2, int month2) {
+        return -1;
+    }
 }
