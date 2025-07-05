@@ -10,7 +10,7 @@ public class Recursion {
         System.out.println("areAnagrams('hi', 'hi!') → Expected:false  Run:" + areAnagrams("hi", "hi!"));
         System.out.println("addSubtractUpTo([10, 70, 20, 90], 170, 0) → Expected:true  Run:"
                 + addSubtractUpTo(new int[] { 10, 70, 20, 90 }, 170, 0));
-
+        System.out.println("diffDates1(1, 1, 19, 11) → Expected:322  Run:" + diffDates1(1, 1, 19, 11));
     }
 
     /*
@@ -274,46 +274,105 @@ public class Recursion {
     /*
      * THIS IS MY FIRST ATTEMPT
      * boolean addSubtractUpTo(int[] data, int target, int idx) {
-        * if (data.length == 0 || idx >= data.length) {
-        *      return false;
-        * }
+     * if (data.length == 0 || idx >= data.length) {
+     * return false;
+     * }
      * 
-        * if (target == 0) {
-        *       return true;
-        * }
+     * if (target == 0) {
+     * return true;
+     * }
      * 
-        * return help(data, target + data[idx], idx + 1)
-        *      || help(data, target - data[idx], idx + 1);
+     * return help(data, target + data[idx], idx + 1)
+     * || help(data, target - data[idx], idx + 1);
      * }
      * 
      * boolean help(int[] data, int target, int idx) {
-        * if (target == 0) {
-        *       return true;
-        * }
+     * if (target == 0) {
+     * return true;
+     * }
      * 
-        * if (idx >= data.length) {
-        *       return false;
-        * }
+     * if (idx >= data.length) {
+     * return false;
+     * }
      * 
-        * return help(data, target + data[idx], idx + 1)
-        *       || help(data, target - data[idx], idx + 1);
+     * return help(data, target + data[idx], idx + 1)
+     * || help(data, target - data[idx], idx + 1);
      * }
      * 
      */
 
     /*
      * 
-    Define a recursive function that when passed two dates in the same year 
-    (assume non-leap year), returns the difference (in days) between the two. 
-    For example, there is a two-day difference between 13/04/2011 and 15/04/2011. 
-    You may not use any loops. You may create helper functions if needed.
-
-
-    diffDates1(25, 7, 17, 8) → 23
-    diffDates1(15, 7, 31, 12) → 169
-    diffDates1(1, 1, 19, 11) → 322
+     * Define a recursive function that when passed two dates in the same year
+     * (assume non-leap year), returns the difference (in days) between the two.
+     * For example, there is a two-day difference between 13/04/2011 and 15/04/2011.
+     * You may not use any loops. You may create helper functions if needed.
+     * 
+     * 
+     * diffDates1(25, 7, 17, 8) → 23
+     * diffDates1(15, 7, 31, 12) → 169
+     * diffDates1(1, 1, 19, 11) → 322
      */
-    int diffDates1(int day1, int month1, int day2, int month2) {
-        return -1;
+    static int diffDates1(int day1, int month1, int day2, int month2) {
+        if (month1 > month2) {
+            return diffDates1(day2, month2, day1, month1);
+        }
+        int[] days = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+        if (month1 == month2) {
+            return Math.abs(day2 - day1);
+        }
+
+        if (month2 == month1 + 1 && day2 < day1) {
+            return days[month1] - day1 + day2;
+        }
+
+        return days[month1] + diffDates1(day1, month1 + 1, day2, month2);
     }
+    /*
+     * static int diffDates1(int day1, int month1, int day2, int month2) {
+     * int[] months = new int[] { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+     * };
+     * if(month1 > month2) {
+     * int temp = month1;
+     * month1 = month2;
+     * month2 = temp;
+     * temp = day1;
+     * day1 = day2;
+     * day2 = temp;
+     * }
+     * if(month1 == month2 && day1 > day2) {
+     * int temp = day1;
+     * day1 = day2;
+     * day2 = temp;
+     * }
+     * int totalDays = day2 - day1;
+     * 
+     * if (month2 == month1) {
+     * return totalDays;
+     * }
+     * 
+     * totalDays = months[month1] - day1 + day2;
+     * month1++;
+     * if (month2 == month1) {
+     * return totalDays;
+     * }
+     * 
+     * totalDays = helpDiffDates1(month1, month2-1, totalDays);
+     * 
+     * return totalDays;
+     * 
+     * }
+     * 
+     * static int helpDiffDates1(int month1, int month2, int totalDays) {
+     * int[] months = new int[] { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+     * };
+     * 
+     * if (month2 == month1) {
+     * return totalDays+months[month1];
+     * }
+     * 
+     * return helpDiffDates1(month1+1, month2, totalDays + months[month1]);
+     * }
+     */
 }
