@@ -8,7 +8,34 @@ import java.util.Map;
 
 public class LearningArrays {
     public static void main(String[] args) {
-        System.out.println(merge(new int[] {}, new int[] { 1, 2, 3, 4, 5, 6 }));
+        System.out.println("Test 1 >>>>>>>>>>");
+        System.out.println("merge([10, 70, 90], [20]) → Expected:[10, 20, 70, 90] \nRun:");
+        int[] test1 = merge(new int[] {10, 70, 90}, new int[] {20});
+        for (int item : test1) {
+            System.out.print(item + " ");
+        }
+        System.out.println();
+
+        System.out.println("Test 2 >>>>>>>>>>");
+        System.out.println("distanceFromHome(['10N', '10W', '10S', '8E']) → Expected: 2.0 \nRun: "
+        +distanceFromHome(new String[] { "10N", "10W", "10S", "8E" }));
+        
+
+        System.out.println("Test 3 >>>>>>>>>>");
+        System.out.println("longestEvenRun([10, 60, 71, 120, 80, 100]) →  Expected: [120, 80, 100] \nRun:");
+        int[] test3 = longestEvenRun(new int[] { 10, 60, 71, 120, 80, 100 });
+        for (int item : test3) {
+            System.out.print(item + " ");
+        }
+        System.out.println();
+
+        System.out.println("Test 4 >>>>>>>>>>");
+        System.out.println("longestAscendingRun([2, 1, 1, 4, 8]) →  Expected: [1, 1, 4, 8] \nRun:");
+        int[] test4 = longestAscendingRun(new int[] { 2, 1, 1, 4, 8});
+        for (int item : test4) {
+            System.out.print(item + " ");
+        }
+        System.out.println();
     }
 
     /*
@@ -212,5 +239,112 @@ merge([1, 2, 3, 4, 5, 6, 7, 8], []) → [1, 2, 3, 4, 5, 6, 7, 8]
             }
         }
         return max;
+    }
+
+    /*
+     * 
+     * Define a function that when passed an array, returns the longest stretch of
+     * even numbers in the array.
+     * 
+     * In case of a tie, return the sequence occurring first.
+     * 
+     * 
+     * longestEvenRun([]) → []
+     * longestEvenRun([10, 60, 71, 120, 80, 100]) → [120, 80, 100]
+     * longestEvenRun([1, 7, 3, 9]) → []
+     * 
+     */
+    static int[] longestEvenRun(int[] data) {
+        int count = 0;
+        int startIdx = 0;
+        boolean isStart = true;
+        int earliestCount = 0;
+        int earliestStartIndx = 0;
+        for (int i = 0; i < data.length; i++) {
+
+            if (data[i] % 2 == 0) {
+
+                if (isStart) {
+                    startIdx = i;
+                    isStart = false;
+                }
+
+                count++;
+
+                if (count > earliestCount) {
+                    earliestCount = count;
+                    earliestStartIndx = startIdx;
+                }
+
+                continue;
+            }
+
+            if (data[i] % 2 != 0) {
+                isStart = true;
+                count = 0;
+            }
+
+        }
+        if (earliestCount == 0) {
+            return new int[] {};
+        }
+        int[] longestEvenRun = new int[earliestCount];
+
+        for (int i = 0; i < longestEvenRun.length; i++) {
+            longestEvenRun[i] = data[earliestStartIndx++];
+
+        }
+        return longestEvenRun;
+    }
+
+    /*
+     * Define a function that when passed an array, returns the longest subsequence
+     * that is in ascending order in the array.
+     * 
+     * In case of a tie, return the sequence occurring first.
+     * 
+     * 
+     * longestAscendingRun([]) → []
+     * longestAscendingRun([10, 60, 71, 120, 80, 100]) → [10, 60, 71, 120]
+     * longestAscendingRun([1, 7, 3, 9]) → [1, 7]
+     */
+    static int[] longestAscendingRun(int[] data) {
+        int count = 1;
+        int startIdx = 0;
+        boolean isStart = true;
+        int earliestCount = 0;
+        int earliestStartIndx = 0;
+        for (int i = 1; i < data.length; i++) {
+            if (data[i] >= data[i - 1]) {
+                if (isStart) {
+                    startIdx = i - 1;
+                    isStart = false;
+                }
+                count++;
+                if(i != data.length-1) {
+                    continue;
+                }
+            }
+            if (count > earliestCount) {
+                earliestCount = count;
+                earliestStartIndx = startIdx;
+                isStart = true;
+                count = 1;
+            }
+            if (data[i] < data[i - 1]) {
+                isStart = true;
+                count = 1;
+            }
+        }
+        if (earliestCount == 0) {
+            return new int[] {};
+        }
+        int[] ascendingResult = new int[earliestCount];
+
+        for (int i = 0; i < ascendingResult.length; i++) {
+            ascendingResult[i] = data[earliestStartIndx++];
+
+        }
+        return ascendingResult;
     }
 }
