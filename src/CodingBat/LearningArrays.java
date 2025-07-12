@@ -10,7 +10,7 @@ public class LearningArrays {
     public static void main(String[] args) {
         System.out.println("Test 1 >>>>>>>>>>");
         System.out.println("merge([10, 70, 90], [20]) → Expected:[10, 20, 70, 90] \nRun:");
-        int[] test1 = merge(new int[] {10, 70, 90}, new int[] {20});
+        int[] test1 = merge(new int[] { 10, 70, 90 }, new int[] { 20 });
         for (int item : test1) {
             System.out.print(item + " ");
         }
@@ -18,8 +18,7 @@ public class LearningArrays {
 
         System.out.println("Test 2 >>>>>>>>>>");
         System.out.println("distanceFromHome(['10N', '10W', '10S', '8E']) → Expected: 2.0 \nRun: "
-        +distanceFromHome(new String[] { "10N", "10W", "10S", "8E" }));
-        
+                + distanceFromHome(new String[] { "10N", "10W", "10S", "8E" }));
 
         System.out.println("Test 3 >>>>>>>>>>");
         System.out.println("longestEvenRun([10, 60, 71, 120, 80, 100]) →  Expected: [120, 80, 100] \nRun:");
@@ -31,24 +30,28 @@ public class LearningArrays {
 
         System.out.println("Test 4 >>>>>>>>>>");
         System.out.println("longestAscendingRun([2, 1, 1, 4, 8]) →  Expected: [1, 1, 4, 8] \nRun:");
-        int[] test4 = longestAscendingRun(new int[] { 2, 1, 1, 4, 8});
+        int[] test4 = longestAscendingRun(new int[] { 2, 1, 1, 4, 8 });
         for (int item : test4) {
             System.out.print(item + " ");
         }
         System.out.println();
+        
+        System.out.println("Test 5 >>>>>>>>>>");
+        System.out.println("oneInEachSubArray([10, 70, 20, 90, 50, 80, 60, 10, 20, 10, 100, 70], 3) → Expected: true \nRun:");
+        System.out.println(oneInEachSubArray(new int[]{10, 70, 20, 90, 50, 80, 60, 10, 20, 10, 100, 70}, 3));
     }
 
     /*
-     * Define a function that when passed two arrays, 
-     * ach sorted in ascending order, returns an array 
+     * Define a function that when passed two arrays,
+     * ach sorted in ascending order, returns an array
      * that merges the two arrays in an overall ascending order.
-
-Treat a null array as an empty array.
-
-
-merge([10, 70, 90], [20]) → [10, 20, 70, 90]
-merge([], [1, 2, 3, 4, 5, 6]) → [1, 2, 3, 4, 5, 6]
-merge([1, 2, 3, 4, 5, 6, 7, 8], []) → [1, 2, 3, 4, 5, 6, 7, 8]
+     * 
+     * Treat a null array as an empty array.
+     * 
+     * 
+     * merge([10, 70, 90], [20]) → [10, 20, 70, 90]
+     * merge([], [1, 2, 3, 4, 5, 6]) → [1, 2, 3, 4, 5, 6]
+     * merge([1, 2, 3, 4, 5, 6, 7, 8], []) → [1, 2, 3, 4, 5, 6, 7, 8]
      */
     static int[] merge(int[] a, int[] b) {
         if (a == null && b == null) {
@@ -321,7 +324,7 @@ merge([1, 2, 3, 4, 5, 6, 7, 8], []) → [1, 2, 3, 4, 5, 6, 7, 8]
                     isStart = false;
                 }
                 count++;
-                if(i != data.length-1) {
+                if (i != data.length - 1) {
                     continue;
                 }
             }
@@ -346,5 +349,48 @@ merge([1, 2, 3, 4, 5, 6, 7, 8], []) → [1, 2, 3, 4, 5, 6, 7, 8]
 
         }
         return ascendingResult;
+    }
+
+    /*
+     * Define a function that when passed an integer array and a second integer
+     * representing
+     * the number of sub-arrays in which it should be divided (assume it can be
+     * divided evenly),
+     * returns true if there is at least one common item in every sub-array, false
+     * otherwise.
+     * 
+     * 
+     * oneInEachSubArray([20, 20, 20, 20], 2) → true
+     * oneInEachSubArray([20, 20, 20, 10, 10, 10], 2) → false
+     * oneInEachSubArray([10, 70, 20, 90, 50, 80, 60, 10, 20, 10, 100, 70], 3) →
+     * true
+     */
+    static boolean oneInEachSubArray(int[] a, int n) {
+        int subNum = a.length / n;
+        int[] oneSub = new int[subNum];
+        int subArrCounter = 2;
+        boolean result = false;
+
+        for (int i = 0; i < a.length; i++) {
+            if (i >= 0 && i < subNum) {
+                oneSub[i] = a[i];
+            }
+            if (i > subNum-1) {
+                result = false;
+                for (int k = 0; k < subNum; k++) {
+                    if (oneSub[k] == a[i]) {
+                        result = true;
+                        break;
+                    }
+                    if (k == subNum - 1 && i == subArrCounter*subNum-1 && result == false) {
+                        return false;
+                    }
+                }
+            }
+            if(i == subArrCounter*subNum-1 ) {
+                subArrCounter++;
+            }
+        }
+        return true;
     }
 }
