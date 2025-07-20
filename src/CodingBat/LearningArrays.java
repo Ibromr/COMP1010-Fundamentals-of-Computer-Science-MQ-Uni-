@@ -2,6 +2,7 @@ package CodingBat;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,10 +36,20 @@ public class LearningArrays {
             System.out.print(item + " ");
         }
         System.out.println();
-        
+
         System.out.println("Test 5 >>>>>>>>>>");
-        System.out.println("oneInEachSubArray([10, 70, 20, 90, 50, 80, 60, 10, 20, 10, 100, 70], 3) → Expected: true \nRun:");
-        System.out.println(oneInEachSubArray(new int[]{10, 70, 20, 90, 50, 80, 60, 10, 20, 10, 100, 70}, 3));
+        System.out.println("oneInEachSubArray([10, 20, 30, 40, 10, 40], 3) → Expected: false \nRun:");
+        System.out.println(oneInEachSubArray(new int[] { 10, 20, 30, 40, 10, 40 }, 3));
+
+        
+        System.out.println();
+        System.out.println("Test 6 >>>>>>>>>>");
+        System.out.println("shortenedIDs([101, 128, 107, 105]) → Expected: [1, 8, 7, 5] \nRun:");
+        int[] test5 = shortenedIDs(new int[] {101, 128, 107, 105});
+        for (int item : test5) {
+            System.out.print(item + " ");
+        }
+        System.out.println();
     }
 
     /*
@@ -366,31 +377,144 @@ public class LearningArrays {
      * true
      */
     static boolean oneInEachSubArray(int[] a, int n) {
-        int subNum = a.length / n;
-        int[] oneSub = new int[subNum];
-        int subArrCounter = 2;
-        boolean result = false;
+        if (a.length == 0 || n <= 0)
+            return false;
 
-        for (int i = 0; i < a.length; i++) {
-            if (i >= 0 && i < subNum) {
-                oneSub[i] = a[i];
-            }
-            if (i > subNum-1) {
-                result = false;
-                for (int k = 0; k < subNum; k++) {
-                    if (oneSub[k] == a[i]) {
-                        result = true;
-                        break;
-                    }
-                    if (k == subNum - 1 && i == subArrCounter*subNum-1 && result == false) {
-                        return false;
-                    }
+        int subSize = a.length / n; // Size of each subarray
+
+        // Create a set of all elements in first subarray
+        HashSet<Integer> commonElements = new HashSet<>();
+        for (int i = 0; i < subSize; i++) {
+            commonElements.add(a[i]);
+        }
+
+        // For each subsequent subarray
+        for (int subArray = 1; subArray < n; subArray++) {
+            HashSet<Integer> currentSubElements = new HashSet<>();
+            int startIdx = subArray * subSize;
+
+            // Track which elements from first subarray appear in this one
+            for (int i = 0; i < subSize; i++) {
+                int element = a[startIdx + i];
+                if (commonElements.contains(element)) {
+                    currentSubElements.add(element);
                 }
             }
-            if(i == subArrCounter*subNum-1 ) {
-                subArrCounter++;
+
+            // If no common elements with first subarray, return false
+            if (currentSubElements.isEmpty()) {
+                return false;
             }
+
+            // Update common elements to those found in this subarray
+            commonElements = currentSubElements;
         }
+
         return true;
     }
+
+    // static boolean oneInEachSubArray(int[] a, int n) {
+    //     if (a.length == 0 || n <= 0)
+    //         return false;
+
+    //     int subSize = a.length / n;
+
+    //     // Track which positions in first subarray have elements that appear in ALL
+    //     // subarrays
+    //     boolean[] commonPositions = new boolean[subSize];
+    //     // Initially, all positions in first subarray are potential candidates
+    //     Arrays.fill(commonPositions, true);
+
+    //     // For each subsequent subarray
+    //     for (int subArray = 1; subArray < n; subArray++) {
+    //         boolean[] newCommonPositions = new boolean[subSize];
+    //         int startIdx = subArray * subSize;
+
+    //         // Check each position in first subarray
+    //         for (int pos = 0; pos < subSize; pos++) {
+    //             if (commonPositions[pos]) { // If this position was common so far
+    //                 int firstSubElement = a[pos];
+
+    //                 // Check if this element appears in current subarray
+    //                 for (int i = 0; i < subSize; i++) {
+    //                     if (a[startIdx + i] == firstSubElement) {
+    //                         newCommonPositions[pos] = true;
+    //                         break;
+    //                     }
+    //                 }
+    //             }
+    //         }
+
+    //         commonPositions = newCommonPositions;
+
+    //         // Early termination: if no common elements left
+    //         boolean hasCommon = false;
+    //         for (boolean b : commonPositions) {
+    //             if (b) {
+    //                 hasCommon = true;
+    //                 break;
+    //             }
+    //         }
+    //         if (!hasCommon)
+    //             return false;
+    //     }
+
+    //     return true;
+    // }
+
+
+    /*
+     * To reduce complexity, a company wants to generate the smallest number of least-significant digits 
+     * from IDs (customer ID, order ID, staff ID, etc.).
+
+    For example, if the original order IDs are {101, 128, 107, 105}, the shortened IDs are {1, 8, 7, 5}, 
+    and if the original order IDs are {10183, 27, 21183, 127}, the shortened IDs are {183, 27, 1183, 127}. 
+    Define a function that when passed an array containing n IDs (all different), returns an array containing 
+    the minimum number of least-significant digits to distinctively distinguish them.
+
+
+    shortenedIDs([101, 128, 107, 105]) → [1, 8, 7, 5]
+    shortenedIDs([25183, 10183]) → [5183, 183]
+    shortenedIDs([10183, 27, 25183, 127]) → [183, 27, 5183, 127]
+
+    */
+    static int[] shortenedIDs(int[] ids) {
+        int[] result = new int[ids.length];
+
+        for (int i = 0; i < ids.length; i++) {
+            while (ids[i] > 0){
+                int numberOfDigits = String.valueOf(ids[i]).length()-1;
+                int dividend = 1;
+                while (numberOfDigits>0) {
+                    dividend *=10;
+                    numberOfDigits--;
+                }
+                int k = 0;
+                for(k = 0; k < result.length-1; k++ ) {
+                    if(result[0] == 0) {
+                        result[k] = ids[i] % dividend;
+                        break;
+                    }
+                    else if(result[k] == ids[i] % dividend) {
+                        dividend = dividend / 10;
+                        k = 0;
+                        continue;
+                    }
+                    else if (result[k] != ids[i] % dividend && result[k+1] == 0) {
+                        result[k+1] = ids[i] % dividend;
+                        k = k+1;
+                        break;
+                        
+                    } else {
+                        
+                    }
+                }
+                if(ids[i] % dividend == result[k]) {
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
 }
