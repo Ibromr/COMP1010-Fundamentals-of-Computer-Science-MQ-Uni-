@@ -500,11 +500,15 @@ public class LearningArrays {
     // }
 
     static int[] shortenedIDs(int[] ids) {
+    int maxDigits = 0;
+    for (int id : ids) {
+        maxDigits = Math.max(maxDigits, (int)Math.log10(id) + 1);
+    }
         int reqDigits = 1;
         boolean distinct = false;
         while (!distinct) {
             distinct = allUnique(ids, reqDigits);
-            if (!distinct) {
+            if (!distinct && reqDigits <= maxDigits) {
                 reqDigits++;
             }
         }
