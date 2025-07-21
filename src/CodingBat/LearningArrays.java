@@ -41,11 +41,10 @@ public class LearningArrays {
         System.out.println("oneInEachSubArray([10, 20, 30, 40, 10, 40], 3) → Expected: false \nRun:");
         System.out.println(oneInEachSubArray(new int[] { 10, 20, 30, 40, 10, 40 }, 3));
 
-        
         System.out.println();
         System.out.println("Test 6 >>>>>>>>>>");
-        System.out.println("shortenedIDs([101, 128, 107, 105]) → Expected: [1, 8, 7, 5] \nRun:");
-        int[] test5 = shortenedIDs(new int[] {101, 128, 107, 105});
+        System.out.println("shortenedIDs([25183, 10183]) → Expected: [5183, 183] \nRun:");
+        int[] test5 = shortenedIDs(new int[] { 25183, 10183 });
         for (int item : test5) {
             System.out.print(item + " ");
         }
@@ -414,107 +413,128 @@ public class LearningArrays {
     }
 
     // static boolean oneInEachSubArray(int[] a, int n) {
-    //     if (a.length == 0 || n <= 0)
-    //         return false;
+    // if (a.length == 0 || n <= 0)
+    // return false;
 
-    //     int subSize = a.length / n;
+    // int subSize = a.length / n;
 
-    //     // Track which positions in first subarray have elements that appear in ALL
-    //     // subarrays
-    //     boolean[] commonPositions = new boolean[subSize];
-    //     // Initially, all positions in first subarray are potential candidates
-    //     Arrays.fill(commonPositions, true);
+    // // Track which positions in first subarray have elements that appear in ALL
+    // // subarrays
+    // boolean[] commonPositions = new boolean[subSize];
+    // // Initially, all positions in first subarray are potential candidates
+    // Arrays.fill(commonPositions, true);
 
-    //     // For each subsequent subarray
-    //     for (int subArray = 1; subArray < n; subArray++) {
-    //         boolean[] newCommonPositions = new boolean[subSize];
-    //         int startIdx = subArray * subSize;
+    // // For each subsequent subarray
+    // for (int subArray = 1; subArray < n; subArray++) {
+    // boolean[] newCommonPositions = new boolean[subSize];
+    // int startIdx = subArray * subSize;
 
-    //         // Check each position in first subarray
-    //         for (int pos = 0; pos < subSize; pos++) {
-    //             if (commonPositions[pos]) { // If this position was common so far
-    //                 int firstSubElement = a[pos];
+    // // Check each position in first subarray
+    // for (int pos = 0; pos < subSize; pos++) {
+    // if (commonPositions[pos]) { // If this position was common so far
+    // int firstSubElement = a[pos];
 
-    //                 // Check if this element appears in current subarray
-    //                 for (int i = 0; i < subSize; i++) {
-    //                     if (a[startIdx + i] == firstSubElement) {
-    //                         newCommonPositions[pos] = true;
-    //                         break;
-    //                     }
-    //                 }
-    //             }
-    //         }
-
-    //         commonPositions = newCommonPositions;
-
-    //         // Early termination: if no common elements left
-    //         boolean hasCommon = false;
-    //         for (boolean b : commonPositions) {
-    //             if (b) {
-    //                 hasCommon = true;
-    //                 break;
-    //             }
-    //         }
-    //         if (!hasCommon)
-    //             return false;
-    //     }
-
-    //     return true;
+    // // Check if this element appears in current subarray
+    // for (int i = 0; i < subSize; i++) {
+    // if (a[startIdx + i] == firstSubElement) {
+    // newCommonPositions[pos] = true;
+    // break;
+    // }
+    // }
+    // }
     // }
 
+    // commonPositions = newCommonPositions;
+
+    // // Early termination: if no common elements left
+    // boolean hasCommon = false;
+    // for (boolean b : commonPositions) {
+    // if (b) {
+    // hasCommon = true;
+    // break;
+    // }
+    // }
+    // if (!hasCommon)
+    // return false;
+    // }
+
+    // return true;
+    // }
 
     /*
-     * To reduce complexity, a company wants to generate the smallest number of least-significant digits 
+     * To reduce complexity, a company wants to generate the smallest number of
+     * least-significant digits
      * from IDs (customer ID, order ID, staff ID, etc.).
+     * 
+     * For example, if the original order IDs are {101, 128, 107, 105}, the
+     * shortened IDs are {1, 8, 7, 5},
+     * and if the original order IDs are {10183, 27, 21183, 127}, the shortened IDs
+     * are {183, 27, 1183, 127}.
+     * Define a function that when passed an array containing n IDs (all different),
+     * returns an array containing
+     * the minimum number of least-significant digits to distinctively distinguish
+     * them.
+     * 
+     * 
+     * shortenedIDs([101, 128, 107, 105]) → [1, 8, 7, 5]
+     * shortenedIDs([25183, 10183]) → [5183, 183]
+     * shortenedIDs([10183, 27, 25183, 127]) → [183, 27, 5183, 127]
+     * 
+     */
+     
+    // First Version
+    // static int[] shortenedIDs(int[] ids) {
+    //     int[] result = new int[ids.length];
+    //     HashSet<Integer> seenElements = new HashSet<>();
+    //     int modulo = 10;
+    //     for (int i = 0; i < ids.length; i++) {
+    //         result[i] = ids[i] % (modulo);
+    //         if (!seenElements.add(ids[i] % (modulo))) {
+    //             modulo *= 10;
+    //             seenElements.clear();
+    //             i = -1;
+    //             continue;
+    //         }
+    //     }
+    //     return result;
+    // }
 
-    For example, if the original order IDs are {101, 128, 107, 105}, the shortened IDs are {1, 8, 7, 5}, 
-    and if the original order IDs are {10183, 27, 21183, 127}, the shortened IDs are {183, 27, 1183, 127}. 
-    Define a function that when passed an array containing n IDs (all different), returns an array containing 
-    the minimum number of least-significant digits to distinctively distinguish them.
-
-
-    shortenedIDs([101, 128, 107, 105]) → [1, 8, 7, 5]
-    shortenedIDs([25183, 10183]) → [5183, 183]
-    shortenedIDs([10183, 27, 25183, 127]) → [183, 27, 5183, 127]
-
-    */
     static int[] shortenedIDs(int[] ids) {
-        int[] result = new int[ids.length];
-
-        for (int i = 0; i < ids.length; i++) {
-            while (ids[i] > 0){
-                int numberOfDigits = String.valueOf(ids[i]).length()-1;
-                int dividend = 1;
-                while (numberOfDigits>0) {
-                    dividend *=10;
-                    numberOfDigits--;
-                }
-                int k = 0;
-                for(k = 0; k < result.length-1; k++ ) {
-                    if(result[0] == 0) {
-                        result[k] = ids[i] % dividend;
-                        break;
-                    }
-                    else if(result[k] == ids[i] % dividend) {
-                        dividend = dividend / 10;
-                        k = 0;
-                        continue;
-                    }
-                    else if (result[k] != ids[i] % dividend && result[k+1] == 0) {
-                        result[k+1] = ids[i] % dividend;
-                        k = k+1;
-                        break;
-                        
-                    } else {
-                        
-                    }
-                }
-                if(ids[i] % dividend == result[k]) {
-                    break;
-                }
+        int reqDigits = 1;
+        boolean distinct = false;
+        while (!distinct) {
+            distinct = allUnique(ids, reqDigits);
+            if (!distinct) {
+                reqDigits++;
             }
         }
+
+        int[] result = new int[ids.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = lastDigits(ids[i], reqDigits);
+        }
         return result;
+    }
+
+    static boolean allUnique(int[] data, int d) {
+        HashSet<Integer> shortenedIDs = new HashSet<>();
+        for (int i = 0; i < data.length; i++) {
+            if(!shortenedIDs.add(lastDigits(data[i], d))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static int lastDigits(int n, int d) {
+        if (d <= 9) {
+            int divisor = 1;
+            for (int i = 0; i < d; i++) {
+                divisor *= 10;
+            }
+            return n % divisor;
+        }
+        return n % (int) Math.pow(10, d);
     }
 
 }
